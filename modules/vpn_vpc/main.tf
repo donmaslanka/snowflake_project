@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 # VPC + Subnets
-resource "aws_vpc" "this" {
+resource "aws_vpc" "tuai" {
   cidr_block           = var.vpc_cidr
   enable_dns_support   = true
   enable_dns_hostnames = true
@@ -11,13 +11,13 @@ resource "aws_vpc" "this" {
 }
 
 resource "aws_internet_gateway" "igw" {
-  vpc_id = aws_vpc.this.id
+  vpc_id = aws_vpc.tuai.id
   tags   = var.tags
 }
 
 resource "aws_subnet" "public" {
   for_each                  = toset(var.public_subnet_cidrs)
-  vpc_id                    = aws_vpc.this.id
+  vpc_id                    = aws_vpc.tuai.id
   cidr_block                = each.key
   map_public_ip_on_launch   = true
   availability_zone         = "${var.region}a"
@@ -26,7 +26,7 @@ resource "aws_subnet" "public" {
 
 resource "aws_subnet" "private" {
   for_each          = toset(var.private_subnet_cidrs)
-  vpc_id            = aws_vpc.this.id
+  vpc_id            = aws_vpc.tuai.id
   cidr_block        = each.key
   availability_zone = "${var.region}a"
   tags              = var.tags
@@ -41,7 +41,7 @@ resource "aws_customer_gateway" "cgw" {
 }
 
 resource "aws_vpn_gateway" "vgw" {
-  vpc_id = aws_vpc.this.id
+  vpc_id = aws_vpc.tuai.id
   tags   = var.tags
 }
 
@@ -61,7 +61,7 @@ resource "aws_vpn_connection_route" "routes" {
 
 # Private Routing
 resource "aws_route_table" "private" {
-  vpc_id = aws_vpc.this.id
+  vpc_id = aws_vpc.tuai.id
   tags   = var.tags
 }
 
@@ -113,6 +113,6 @@ resource "aws_flow_log" "vpc" {
   log_group_name       = aws_cloudwatch_log_group.vpc_flow_logs[0].name
   iam_role_arn         = aws_iam_role.flow_logs[0].arn
   traffic_type         = var.flow_log_traffic_type
-  vpc_id               = aws_vpc.this.id
+  vpc_id               = aws_vpc.tuai.id
   tags                 = var.tags
 }

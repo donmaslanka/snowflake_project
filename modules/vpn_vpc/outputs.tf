@@ -1,5 +1,5 @@
 output "vpc_id" {
-  value = aws_vpc.this.id
+  value = aws_vpc.tuai.id
 }
 
 output "vpn_connection_id" {
