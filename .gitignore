@@ -3,4 +3,4 @@
 *.xlsx
 *.xls
 *.csv
-*.docx
+/misc

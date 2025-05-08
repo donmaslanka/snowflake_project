@@ -13,7 +13,7 @@ terraform {
   backend "s3" {
     bucket = var.s3_bucket_name
     key    = "tuai-terraform-staging.tfstate"
-    region = "<bucket-region>"
+    region = var.aws_region
     # Optional DynamoDB for state locking. See https://developer.hashicorp.com/terraform/language/settings/backends/s3 for details.
     dynamodb_table = "terraform-state-lock-table"
     encrypt        = true
@@ -22,11 +22,10 @@ terraform {
 }
 
 provider "snowflake" {
-  username    = var.snowflake_username
-  password    = var.snowflake_password
-  account     = "<your_snowflake_account_identifier>"
-  role        = "<your_snowflake_role>"
-  private_key = var.snowflake_private_key
+  authenticator = "SNOWFLAKE_JWT"
+  account_name  = var.snowflake_account_name
+  role          = var.snowflake_role
+  private_key   = var.snowflake_private_key
 }
 
 module "snowflake_resources" {
