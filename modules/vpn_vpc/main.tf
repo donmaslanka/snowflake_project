@@ -16,12 +16,12 @@ resource "aws_internet_gateway" "igw" {
 }
 
 resource "aws_subnet" "public" {
-  for_each                  = toset(var.public_subnet_cidrs)
-  vpc_id                    = aws_vpc.tuai.id
-  cidr_block                = each.key
-  map_public_ip_on_launch   = true
-  availability_zone         = "${var.region}a"
-  tags                      = var.tags
+  for_each                = toset(var.public_subnet_cidrs)
+  vpc_id                  = aws_vpc.tuai.id
+  cidr_block              = each.key
+  map_public_ip_on_launch = true
+  availability_zone       = "${var.region}a"
+  tags                    = var.tags
 }
 
 resource "aws_subnet" "private" {
@@ -110,7 +110,6 @@ resource "aws_iam_role_policy_attachment" "flow_logs" {
 resource "aws_flow_log" "vpc" {
   count                = var.enable_flow_logs ? 1 : 0
   log_destination_type = "cloud-watch-logs"
-  log_group_name       = aws_cloudwatch_log_group.vpc_flow_logs[0].name
   iam_role_arn         = aws_iam_role.flow_logs[0].arn
   traffic_type         = var.flow_log_traffic_type
   vpc_id               = aws_vpc.tuai.id

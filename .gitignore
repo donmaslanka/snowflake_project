@@ -1,2 +1,6 @@
 .terraform
 /terraform
+*.xlsx
+*.xls
+*.csv
+*.docx
